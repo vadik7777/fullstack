@@ -25,14 +25,16 @@ public class TreeRepositoryImpl implements TreeRepository {
     }
 
     @Override
-    public Tree remove(Tree tree) {
-        entityManager.remove(entityManager.merge(tree));
-        return tree;
+    public int remove(Tree tree) {
+        return entityManager.createQuery("delete from Tree t where t.id >=:id and t.branch =:branch ")
+        .setParameter("id", tree.getBranch())
+        .setParameter("branch", tree.getBranch())
+        .executeUpdate();
     }
 
     @Override
     public List<Tree> findByTitle(String title) {
-        return  entityManager.createQuery("select t from Tree t where t.title=:tile order by t.title")
+        return  entityManager.createQuery("select t from Tree t where t.title=:title order by t.title")
                 .setParameter("title", title)
                 .setMaxResults(10).getResultList();
     }
@@ -44,8 +46,8 @@ public class TreeRepositoryImpl implements TreeRepository {
 
     @Override
     public List<Tree> findRange(int page, int count) {
-        return  entityManager
-                .createQuery("select t from Tree t where t.sheet = true and t.branch between :start and :finish order by t.id")
+        return  entityManager.createQuery("select t from Tree t where t.sheet = true and t.branch between :start " +
+                "and :finish order by t.id")
                 .setParameter("start", count*(page - 1) + 2)
                 .setParameter("finish", count*page + 1)
                 .getResultList();

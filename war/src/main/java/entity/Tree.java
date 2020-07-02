@@ -20,7 +20,6 @@ public class Tree implements Serializable {
     @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Basic(optional = false)
     private Long id;
 
     @Column(name="branch")

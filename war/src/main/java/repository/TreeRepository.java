@@ -10,7 +10,7 @@ public interface TreeRepository {
 
     Tree update(Tree tree);
 
-    Tree remove(Tree tree);
+    int remove(Tree tree);
 
     List<Tree> findByTitle(String title);
 

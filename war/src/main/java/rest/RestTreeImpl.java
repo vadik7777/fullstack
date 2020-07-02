@@ -40,7 +40,7 @@ public class RestTreeImpl implements RestTree{
     }
 
     @Override
-    public Response deleteMethod() {
-        return null;
+    public Response deleteMethod(Tree tree) {
+        return Response.status(Response.Status.OK).entity(treeRepository.remove(tree)).build();
     }
 }

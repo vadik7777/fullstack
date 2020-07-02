@@ -38,8 +38,9 @@ public interface RestTree {
     @Consumes (MediaType.APPLICATION_JSON)
     Response postMethod();
 
-    @DELETE
+    @POST
     @Path("/delete")
     @Produces( MediaType.APPLICATION_JSON )
-    Response deleteMethod();
+    @Consumes (MediaType.APPLICATION_JSON)
+    Response deleteMethod(Tree tree);
 }
