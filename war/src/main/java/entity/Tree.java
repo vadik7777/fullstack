@@ -26,6 +26,9 @@ public class Tree implements Serializable {
     @Column(name="branch")
     private Long branch;
 
+    @Column(name="sheet")
+    private boolean sheet;
+
     @NotBlank
     @Size(max=255)
     private String title;
@@ -65,5 +68,13 @@ public class Tree implements Serializable {
 
     public void setBranch(Long branch) {
         this.branch = branch;
+    }
+
+    public boolean isSheet() {
+        return sheet;
+    }
+
+    public void setSheet(boolean sheet) {
+        this.sheet = sheet;
     }
 }
