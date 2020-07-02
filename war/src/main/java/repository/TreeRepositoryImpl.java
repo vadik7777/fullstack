@@ -27,7 +27,7 @@ public class TreeRepositoryImpl implements TreeRepository {
     @Override
     public int remove(Tree tree) {
         return entityManager.createQuery("delete from Tree t where t.id >=:id and t.branch =:branch ")
-        .setParameter("id", tree.getBranch())
+        .setParameter("id", tree.getId())
         .setParameter("branch", tree.getBranch())
         .executeUpdate();
     }

@@ -5,7 +5,6 @@ import entity.Tree;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 
 @Path("")
@@ -41,6 +40,6 @@ public interface RestTree {
     @POST
     @Path("/delete")
     @Produces( MediaType.APPLICATION_JSON )
-    @Consumes (MediaType.APPLICATION_JSON)
+    @Consumes (MediaType.TEXT_PLAIN)
     Response deleteMethod(Tree tree);
 }
