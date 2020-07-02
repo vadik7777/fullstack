@@ -14,7 +14,8 @@ public class TreeConverter {
         treeList.forEach( tree -> {recursive(tree, hashTree, retry);});
 
         List<TreeTmp> result = new ArrayList<>();
-        hashTree.get(1l).forEach(treeNode -> {recursive1(treeNode, hashTree, result);});
+        if(!hashTree.isEmpty())
+            hashTree.get(1l).forEach(treeNode -> {recursive1(treeNode, hashTree, result);});
 
         return result;
     }

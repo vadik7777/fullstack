@@ -20,7 +20,7 @@ public class RestTreeImpl implements RestTree{
 
     @Override
     public Response findRange(int page, int count) {
-        List<Tree> treeList = treeRepository.findRange(page - 1, count);
+        List<Tree> treeList = treeRepository.findRange(page, count);
         return Response.status(Response.Status.OK).entity(TreeConverter.convert(treeList)).build();
     }
 

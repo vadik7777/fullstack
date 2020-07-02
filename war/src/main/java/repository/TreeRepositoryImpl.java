@@ -44,10 +44,10 @@ public class TreeRepositoryImpl implements TreeRepository {
 
     @Override
     public List<Tree> findRange(int page, int count) {
-        //return entityManager.createQuery("select t from Tree t order by t.id").getResultList();
-        return  entityManager.createQuery("select t from Tree t where t.sheet = true order by t.id")
-                .setMaxResults(count)
-                .setFirstResult(page * count)
+        return  entityManager
+                .createQuery("select t from Tree t where t.branch between :start and :finish order by t.id")
+                .setParameter("start", count*(page - 1) + 2)
+                .setParameter("finish", count*page + 1)
                 .getResultList();
     }
 }
