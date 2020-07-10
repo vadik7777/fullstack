@@ -5,6 +5,9 @@ import repository.TreeRepository;
 import util.TreeConverter;
 
 import javax.ejb.EJB;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -14,33 +17,43 @@ public class RestTreeImpl implements RestTree{
     TreeRepository treeRepository;
 
     @Override
-    public Response initMethod() {
-        return null;
-    }
-
-    @Override
-    public Response findRange(int page, int count) {
-        List<Tree> treeList = treeRepository.findRange(page, count);
+    public Response all(int page, int count) {
+        List<Tree> treeList = treeRepository.all(page, count);
         return Response.status(Response.Status.OK).entity(TreeConverter.convert(treeList)).build();
     }
 
     @Override
-    public Response getTree(int id) {
-        return null;
+    public Response length() {
+        return Response.status(Response.Status.OK).entity(treeRepository.length()).build();
     }
 
     @Override
-    public Response putMethod(Tree tree) {
-        return null;
+    public Response create(Tree tree) {
+
+        Tree createTree = treeRepository.create(tree);
+
+        JsonObjectBuilder jsonObjBuilder = Json.createObjectBuilder();
+        jsonObjBuilder.add( "id", createTree.getId());
+        jsonObjBuilder.add( "title", createTree.getTitle());
+        JsonObject jsonObj = jsonObjBuilder.build();
+
+        return Response.status(Response.Status.OK).entity(jsonObj.toString()).build();
     }
 
     @Override
-    public Response postMethod() {
-        return null;
+    public Response update(Tree tree) {
+
+        Tree updateTree = treeRepository.update(tree);
+
+        JsonObjectBuilder jsonObjBuilder = Json.createObjectBuilder();
+        jsonObjBuilder.add( "title", updateTree.getTitle());
+        JsonObject jsonObj = jsonObjBuilder.build();
+
+        return Response.status(Response.Status.OK).entity(jsonObj.toString()).build();
     }
 
     @Override
-    public Response deleteMethod(Tree tree) {
-        return Response.status(Response.Status.OK).entity(treeRepository.remove(tree)).build();
+    public Response delete(Tree tree) {
+        return Response.status(Response.Status.OK).entity(treeRepository.delete(tree)).build();
     }
 }
