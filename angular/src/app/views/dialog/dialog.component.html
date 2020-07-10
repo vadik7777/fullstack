@@ -1,0 +1,13 @@
+<h1 mat-dialog-title *ngIf="data.editable">Редактирование {{itemCancel}}</h1>
+<h1 mat-dialog-title *ngIf="!data.editable">Удаление {{itemCancel}}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Название</mat-label>
+    <input [readonly]="!data.editable" matInput [(ngModel)]="data.item" required>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-button *ngIf="!data.editable" [mat-dialog-close]>Отмена</button>
+  <button mat-button *ngIf="data.editable" [mat-dialog-close]="itemCancel">Отмена</button>
+  <button mat-button *ngIf="data.item" [mat-dialog-close]="data.item" cdkFocusInitial>ОК</button>
+</div>
