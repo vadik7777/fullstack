@@ -18,8 +18,8 @@ public class TreeRepositoryImpl implements TreeRepository {
     public List<Tree> all(int page, int count) {
         return  entityManager.createQuery("select t from Tree t where t.sheet = true and t.branch between :start " +
                 "and :finish order by t.id")
-                .setParameter("start", count*page + 2)
-                .setParameter("finish", count*(page + 1) + 1)
+                .setParameter("start", count*page + 1)
+                .setParameter("finish", count*(page + 1))
                 .getResultList();
     }
 

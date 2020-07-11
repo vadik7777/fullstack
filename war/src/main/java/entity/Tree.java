@@ -16,7 +16,7 @@ public class Tree implements Serializable {
 
     @Id
     @NotNull
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
