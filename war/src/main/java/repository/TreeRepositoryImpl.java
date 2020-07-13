@@ -16,10 +16,14 @@ public class TreeRepositoryImpl implements TreeRepository {
 
     @Override
     public List<Tree> all(int page, int count) {
-        return  entityManager.createQuery("select t from Tree t where t.sheet = true and t.branch between :start " +
-                "and :finish order by t.id")
-                .setParameter("start", count*page + 1)
-                .setParameter("finish", count*(page + 1))
+
+        List<Long> branches = entityManager.createQuery("select distinct t.branch from Tree t order by t.branch")
+                .setFirstResult(count*page)
+                .setMaxResults(count)
+                .getResultList();
+
+        return  entityManager.createQuery("select t from Tree t where t.sheet = true and t.branch in :branches order by t.id")
+                .setParameter("branches", branches)
                 .getResultList();
     }
 
