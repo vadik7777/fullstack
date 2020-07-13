@@ -9,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RestTreeImpl implements RestTree{
@@ -23,8 +24,26 @@ public class RestTreeImpl implements RestTree{
     }
 
     @Override
+    public Response search(String title, int page, int count) {
+        List<String> titleList = treeRepository.search(title, page, count);
+        List<JsonObject> jsonObjectList = new LinkedList<>();
+        titleList.forEach(titleSearch -> {
+            JsonObjectBuilder jsonObjBuilder = Json.createObjectBuilder();
+            jsonObjBuilder.add( "title", titleSearch);
+            jsonObjectList.add(jsonObjBuilder.build());
+        });
+
+        return Response.status(Response.Status.OK).entity(jsonObjectList.toString()).build();
+    }
+
+    @Override
     public Response length() {
         return Response.status(Response.Status.OK).entity(treeRepository.length()).build();
+    }
+
+    @Override
+    public Response searchLength(String title) {
+        return Response.status(Response.Status.OK).entity(treeRepository.searchLength(title)).build();
     }
 
     @Override

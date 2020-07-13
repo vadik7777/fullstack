@@ -15,9 +15,19 @@ public interface RestTree {
     Response all(@PathParam("page") int page, @PathParam("count") int count);
 
     @GET
+    @Path("/search/{title}/{page}/{count}")
+    @Produces( MediaType.APPLICATION_JSON )
+    Response search(@PathParam("title") String title, @PathParam("page") int page, @PathParam("count") int count);
+
+    @GET
     @Path("/length")
     @Produces( MediaType.TEXT_PLAIN )
     Response length();
+
+    @GET
+    @Path("/search-length/{title}")
+    @Produces( MediaType.TEXT_PLAIN )
+    Response searchLength(@PathParam("title") String title);
 
     @POST
     @Path("/create")

@@ -24,8 +24,24 @@ public class TreeRepositoryImpl implements TreeRepository {
     }
 
     @Override
+    public List<String> search(String title, int page, int count) {
+        return  entityManager.createQuery("select t.title from Tree t where t.title like :title order by t.title")
+                .setParameter("title", "%" + title + "%")
+                .setFirstResult(count*page)
+                .setMaxResults(count)
+                .getResultList();
+    }
+
+    @Override
     public int length() {
         return (int) (long) (entityManager.createQuery("select count(t) from Tree t where t.parent.id = 1").getSingleResult());
+    }
+
+    @Override
+    public int searchLength(String title) {
+        return (int) (long) (entityManager.createQuery("select count(t) from Tree t where t.title like :title")
+                .setParameter("title", "%" + title + "%")
+                .getSingleResult());
     }
 
     @Override

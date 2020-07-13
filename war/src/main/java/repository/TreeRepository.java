@@ -8,7 +8,11 @@ public interface TreeRepository {
 
     List<Tree> all(int page, int count);
 
+    List<String> search(String title, int page, int count);
+
     int length();
+
+    int searchLength(String title);
 
     Tree create(Tree tree);
 

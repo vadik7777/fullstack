@@ -71,7 +71,7 @@ public class DateBaseCreator {
     }
 
     private int randomLevel(){
-        return (int) (Math.random()* 6);
+        return (int) (Math.random()* 7);
     }
 
     private long getBranch(){
