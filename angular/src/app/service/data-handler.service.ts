@@ -18,6 +18,7 @@ export class DataHandlerService {
   localFind: boolean;
   search: boolean;
   searchTitle: string;
+  loading: boolean;
 
   dataChange: BehaviorSubject<TodoItemNode[]>;
   dataPage: Subject<Page>;
@@ -29,6 +30,9 @@ export class DataHandlerService {
     this.page = new Page();
     this.localFind = false;
     this.search  = false;
+    this.searchTitle = '';
+    this.loading = false;
+
     this.dataChange = new BehaviorSubject<TodoItemNode[]>([]);
     this.dataPage = new Subject<Page>();
     this.dataChangeSearch = new Subject<TodoItemNode[]>();
@@ -129,6 +133,7 @@ export class DataHandlerService {
   }
 
   changePage(pageIndex: number, pageSize: number) {
+    if (this.loading) { return; } else { this.loading = true; }
     this.page.pageIndex = pageIndex;
     this.page.pageSize = pageSize;
     if (this.search) {
@@ -140,9 +145,11 @@ export class DataHandlerService {
         this.dataChange.next(response);
       });
     }
+    this.loading = false;
   }
 
   insertItem(parent: TodoItemNode, title: string) {
+    if (this.loading) { return; } else { this.loading = true; }
     this.putData(parent, title).subscribe(response => {
       if (!response) { return; }
       if (parent.children) {
@@ -153,17 +160,21 @@ export class DataHandlerService {
         this.dataChange.next(this.data);
       }
     });
+    this.loading = false;
   }
 
   updateItem(node: TodoItemNode, title: string) {
+    if (this.loading) { return; } else { this.loading = true; }
     this.updateData(node, title).subscribe(response => {
       if (!response) { return; }
       node.title = response.title;
       this.dataChange.next(this.data);
     });
+    this.loading = false;
   }
 
   removeItem(node: TodoItemNode) {
+    if (this.loading) { return; } else { this.loading = true; }
     this.removeData(node).subscribe(response => {
       if (response === -1) { return; }
       this.localFind = false;
@@ -171,6 +182,7 @@ export class DataHandlerService {
       this.dataChange.next(this.data);
       this.updateCount();
     });
+    this.loading = false;
   }
 
   recursive(data: TodoItemNode[], node: TodoItemNode) {
@@ -188,20 +200,23 @@ export class DataHandlerService {
   }
 
   findData(title: string) {
+    if (this.loading) { return; } else { this.loading = true; }
     if (title === '' && this.search === true) {
       this.searchTitle = title;
       this.search = false;
       this.searchData.next(this.search);
       this.updateCount();
+      this.loading = false;
       this.changePage(0, this.page.pageSize);
     } else if (this.searchTitle !== title) {
-        this.searchTitle = title;
-        if (this.search === false) {
-          this.search = true;
-          this.searchData.next(this.search);
-        }
-        this.updateCountSearch();
-        this.changePage(0, this.page.pageSize);
+      this.searchTitle = title;
+      if (this.search === false) {
+        this.search = true;
+        this.searchData.next(this.search);
+      }
+      this.updateCountSearch();
+      this.loading = false;
+      this.changePage(0, this.page.pageSize);
     }
   }
 }
