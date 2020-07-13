@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {TodoItemNode} from '../model';
 import {Page} from '../model/Page';
 import {HttpClient} from '@angular/common/http';
@@ -12,27 +12,46 @@ import {MatDialog} from '@angular/material/dialog';
 })
 export class DataHandlerService {
 
-  private backEndUrl = 'http://localhost:7001/api';
+  private backEndUrl = 'http://188.234.89.238:7001/api';
+
   page: Page;
-  find: boolean;
+  localFind: boolean;
+  search: boolean;
+  searchTitle: string;
+
   dataChange: BehaviorSubject<TodoItemNode[]>;
-  dataPage: BehaviorSubject<Page>;
+  dataPage: Subject<Page>;
+  dataChangeSearch: Subject<TodoItemNode[]>;
+  searchData: Subject<boolean>;
 
   constructor(private http: HttpClient, public dialog: MatDialog) {
+
     this.page = new Page();
-    this.updateCount();
-    this.find = false;
+    this.localFind = false;
+    this.search  = false;
     this.dataChange = new BehaviorSubject<TodoItemNode[]>([]);
-    this.dataPage = new BehaviorSubject<Page>(this.page);
+    this.dataPage = new Subject<Page>();
+    this.dataChangeSearch = new Subject<TodoItemNode[]>();
+    this.searchData = new Subject<boolean>();
+
+    this.updateCount();
     this.changePage(this.page.pageIndex, this.page.pageSize);
   }
 
   get data(): TodoItemNode[] { return this.dataChange.value; }
 
-  getData(pageIndex: number, pageSize: number): Observable<TodoItemNode[]> {
-    return this.http.get<TodoItemNode[]>(this.backEndUrl + '/all/' + pageIndex + '/' + pageSize)
+  getData(): Observable<TodoItemNode[]> {
+    return this.http.get<TodoItemNode[]>(this.backEndUrl + '/all/' + this.page.pageIndex + '/' + this.page.pageSize)
       .pipe(
         catchError(this.handleError<TodoItemNode[]>('Ошибка при получении данных записей', []))
+      );
+  }
+
+  getDataSearch(): Observable<TodoItemNode[]> {
+    return this.http.get<TodoItemNode[]>(this.backEndUrl + '/search/' + this.searchTitle + '/'
+      + this.page.pageIndex + '/' + this.page.pageSize)
+      .pipe(
+        catchError(this.handleError<TodoItemNode[]>('Ошибка при получении данных записей для поиска', []))
       );
   }
 
@@ -40,6 +59,13 @@ export class DataHandlerService {
     return this.http.get<number>(this.backEndUrl + '/length')
       .pipe(
         catchError(this.handleError<number>('Ошибка при получении количества записей', -1))
+      );
+  }
+
+  getDataSearchCount(): Observable<number> {
+    return this.http.get<number>(this.backEndUrl + '/search-length/' + this.searchTitle)
+      .pipe(
+        catchError(this.handleError<number>('Ошибка при получении количества записей для поиска', -1))
       );
   }
 
@@ -90,10 +116,30 @@ export class DataHandlerService {
     });
   }
 
-  changePage(pageIndex: number, pageSize: number) {
-    this.getData(pageIndex, pageSize).subscribe(response => {
-      this.dataChange.next(response);
+  updateCountSearch() {
+    this.getDataSearchCount().subscribe(response => {
+      if (response === -1) {
+        this.page.length = 0;
+      } else {
+        this.page.length = response;
+      }
+      this.page.pageIndex = 0;
+      this.dataPage.next(this.page);
     });
+  }
+
+  changePage(pageIndex: number, pageSize: number) {
+    this.page.pageIndex = pageIndex;
+    this.page.pageSize = pageSize;
+    if (this.search) {
+      this.getDataSearch().subscribe(response => {
+        this.dataChangeSearch.next(response);
+      });
+    } else {
+      this.getData().subscribe(response => {
+        this.dataChange.next(response);
+      });
+    }
   }
 
   insertItem(parent: TodoItemNode, title: string) {
@@ -106,7 +152,6 @@ export class DataHandlerService {
         parent.children = [{title: response.title, id: response.id} as TodoItemNode];
         this.dataChange.next(this.data);
       }
-      this.updateCount();
     });
   }
 
@@ -121,7 +166,7 @@ export class DataHandlerService {
   removeItem(node: TodoItemNode) {
     this.removeData(node).subscribe(response => {
       if (response === -1) { return; }
-      this.find = false;
+      this.localFind = false;
       this.recursive(this.data, node);
       this.dataChange.next(this.data);
       this.updateCount();
@@ -131,14 +176,32 @@ export class DataHandlerService {
   recursive(data: TodoItemNode[], node: TodoItemNode) {
     if (data.indexOf(node) === -1) {
       data.forEach(item => {
-        if (item.children && !this.find) {
+        if (item.children && !this.localFind) {
           this.recursive(item.children, node);
-        } else if (this.find) {
+        } else if (this.localFind) {
           return;
         }});
     } else {
       data.splice(data.indexOf(node), 1);
-      this.find = true;
+      this.localFind = true;
+    }
+  }
+
+  findData(title: string) {
+    if (title === '' && this.search === true) {
+      this.searchTitle = title;
+      this.search = false;
+      this.searchData.next(this.search);
+      this.updateCount();
+      this.changePage(0, this.page.pageSize);
+    } else if (this.searchTitle !== title) {
+        this.searchTitle = title;
+        if (this.search === false) {
+          this.search = true;
+          this.searchData.next(this.search);
+        }
+        this.updateCountSearch();
+        this.changePage(0, this.page.pageSize);
     }
   }
 }

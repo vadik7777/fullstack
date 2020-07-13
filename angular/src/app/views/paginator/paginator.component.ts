@@ -10,28 +10,35 @@ import {Page} from '../../model/Page';
 })
 export class PaginatorComponent {
 
+  @ViewChild('paginator') paginator: MatPaginator;
+
+  length: number;
+  pageSize: number;
+  pageSizeOptions: number[] = [1, 5, 10, 25, 100];
+  pageEvent: PageEvent;
+
   constructor(private _database: DataHandlerService) {
     _database.dataPage.subscribe(page => {
       this.length = page.length;
       this.pageSize = page.pageSize;
-      this.pageIndex = page.pageIndex;
+      if (page.pageIndex === 0) {
+        this.changeToFirstPage();
+      }
     });
   }
-
-  length: number;
-  pageSize: number;
-  pageIndex: number;
-  pageSizeOptions: number[] = [1, 5, 10, 25, 100];
-
-  pageEvent: PageEvent;
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {
       this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
     }
   }
-  public changePage(event: PageEvent) {
+
+  changePage(event: PageEvent) {
     this._database.changePage(event.pageIndex, event.pageSize);
     return event;
+  }
+
+  changeToFirstPage() {
+    this.paginator.firstPage();
   }
 }

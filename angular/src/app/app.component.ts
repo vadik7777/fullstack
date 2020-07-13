@@ -24,6 +24,10 @@ export class AppComponent {
 
   dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
 
+  dataSearch: TodoItemNode[];
+
+  search: boolean;
+
   constructor(private _database: DataHandlerService, public dialog: MatDialog) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
@@ -32,6 +36,14 @@ export class AppComponent {
 
     _database.dataChange.subscribe(data => {
       this.dataSource.data = data;
+    });
+
+    _database.searchData.subscribe(search => {
+      this.search = search;
+    });
+
+    _database.dataChangeSearch.subscribe(dataSearch => {
+      this.dataSearch = dataSearch;
     });
   }
 

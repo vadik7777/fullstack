@@ -1,16 +1,27 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+<app-search></app-search>
 
-  <mat-tree-node *matTreeNodeDef="let node"  matTreeNodePadding>
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" *ngIf="!search">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
     <button *ngIf="treeControl.isExpandable(node)"
             mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.item">
       <mat-icon class="mat-icon-rtl-mirror">
         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
       </mat-icon>
     </button>
-    <label mat-icon-button (click)="addItem(node)"><mat-icon>add</mat-icon></label>
+    <label mat-icon-button (click)="addItem(node)">
+      <mat-icon>add</mat-icon>
+    </label>
     <label class="pointer" (click)="editItem(node)">{{node.title}}</label>
-    <label mat-icon-button (click)="removeItem(node)"><mat-icon>remove</mat-icon></label>
+    <label mat-icon-button (click)="removeItem(node)">
+      <mat-icon>remove</mat-icon>
+    </label>
   </mat-tree-node>
-
 </mat-tree>
+
+<ng-container *ngIf="search">
+  <mat-list role="list" *ngFor="let node of dataSearch">
+    <mat-list-item role="listitem">{{node.title}}</mat-list-item>
+  </mat-list>
+</ng-container>
+
 <app-paginator></app-paginator>

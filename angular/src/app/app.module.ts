@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { DialogComponent } from './views/dialog/dialog.component';
 import { PaginatorComponent } from './views/paginator/paginator.component';
 import { ConfirmationComponent } from './views/confirmation/confirmation.component';
+import { SearchComponent } from './views/search/search.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { ConfirmationComponent } from './views/confirmation/confirmation.compone
     MaterialModule
   ],
   entryComponents: [AppComponent],
-  declarations: [AppComponent, DialogComponent, PaginatorComponent, ConfirmationComponent],
+  declarations: [AppComponent, DialogComponent, PaginatorComponent, ConfirmationComponent, SearchComponent],
   bootstrap: [AppComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
