@@ -20,7 +20,7 @@ import { SearchComponent } from './views/search/search.component';
     HttpClientModule,
     MaterialModule
   ],
-  entryComponents: [AppComponent],
+  entryComponents: [AppComponent, ConfirmationComponent],
   declarations: [AppComponent, DialogComponent, PaginatorComponent, ConfirmationComponent, SearchComponent],
   bootstrap: [AppComponent],
   providers: [
