@@ -12,7 +12,7 @@ import {MatDialog} from '@angular/material/dialog';
 })
 export class DataHandlerService {
 
-  private backEndUrl = 'http://188.234.89.238:7001/api';
+  private backEndUrl = 'https://188.234.89.238/api';
 
   page: Page;
   localFind: boolean;
@@ -210,7 +210,7 @@ export class DataHandlerService {
       this.changePage(0, this.page.pageSize);
     } else if (this.searchTitle !== title) {
       this.searchTitle = title;
-      if (this.search === false) {
+      if (title && this.search === false) {
         this.search = true;
         this.searchData.next(this.search);
       }
@@ -218,5 +218,6 @@ export class DataHandlerService {
       this.loading = false;
       this.changePage(0, this.page.pageSize);
     }
+    this.loading = false;
   }
 }
