@@ -10,7 +10,9 @@ export class SearchComponent {
 
   title: string;
 
-  constructor(private _database: DataHandlerService) { }
+  constructor(private _database: DataHandlerService) {
+    this.title = '';
+  }
 
   search() {
     this._database.findData(this.title);

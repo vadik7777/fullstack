@@ -210,7 +210,7 @@ export class DataHandlerService {
       this.changePage(0, this.page.pageSize);
     } else if (this.searchTitle !== title) {
       this.searchTitle = title;
-      if (title && this.search === false) {
+      if (this.search === false) {
         this.search = true;
         this.searchData.next(this.search);
       }
