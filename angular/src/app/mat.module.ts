@@ -1,3 +1,6 @@
+// Copyright © 2020 Vadim Konovalov. Contacts: <vadik.olympus@e1.ru>
+// License: https://www.eclipse.org/legal/epl-2.0/
+
 import {NgModule} from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ClipboardModule} from '@angular/cdk/clipboard';

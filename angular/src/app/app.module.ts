@@ -1,3 +1,6 @@
+// Copyright © 2020 Vadim Konovalov. Contacts: <vadik.olympus@e1.ru>
+// License: https://www.eclipse.org/legal/epl-2.0/
+
 import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';

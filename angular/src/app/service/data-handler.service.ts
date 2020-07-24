@@ -1,3 +1,6 @@
+// Copyright © 2020 Vadim Konovalov. Contacts: <vadik.olympus@e1.ru>
+// License: https://www.eclipse.org/legal/epl-2.0/
+
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {TodoItemNode} from '../model';

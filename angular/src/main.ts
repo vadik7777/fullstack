@@ -1,3 +1,6 @@
+// Copyright © 2020 Vadim Konovalov. Contacts: <vadik.olympus@e1.ru>
+// License: https://www.eclipse.org/legal/epl-2.0/
+
 import './polyfills';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
